@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget, QGridLayout
 
 from bookkeeper.models.category import Category
 from bookkeeper.models.expense import Expense
@@ -50,6 +50,24 @@ class MainWindow(QtWidgets.QMainWindow):
         self.layout.addWidget(self.expenses_grid)
 
         self.layout.addWidget(QLabel('Бюджет'))
+        self.layout.addWidget(QLabel('<TODO: таблица бюджета>\n\n\n\n\n\n\n\n'))
+
+        bottom_controls = QGridLayout()
+
+        bottom_controls.addWidget(QLabel('Сумма'), 0, 0)
+        bottom_controls.addWidget(QLabel('=============='), 0, 1)
+        bottom_controls.addWidget(QLabel('=============='), 0, 2)
+        bottom_controls.addWidget(QLabel('Категория'), 1, 0)
+        bottom_controls.addWidget(QLabel('======Продукты======'), 1, 1)
+        bottom_controls.addWidget(QLabel('======Редактировать======'), 1, 2)
+        bottom_controls.addWidget(QLabel('============'), 2, 0)
+        bottom_controls.addWidget(QLabel('========Добавить======='), 2, 1)
+        bottom_controls.addWidget(QLabel('========Добавить======='), 2, 2)
+
+        bottom_widget = QWidget()
+        bottom_widget.setLayout(bottom_controls)
+
+        self.layout.addWidget(bottom_widget)
 
         data = cat_repo.get_all()
 
