@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget, QGridLayout
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget, QGridLayout, QComboBox, QLineEdit, QPushButton
 
 from bookkeeper.models.category import Category
 from bookkeeper.models.expense import Expense
@@ -55,14 +55,23 @@ class MainWindow(QtWidgets.QMainWindow):
         bottom_controls = QGridLayout()
 
         bottom_controls.addWidget(QLabel('Сумма'), 0, 0)
-        bottom_controls.addWidget(QLabel('=============='), 0, 1)
-        bottom_controls.addWidget(QLabel('=============='), 0, 2)
+
+        amount_line_edit = QLineEdit()
+
+        bottom_controls.addWidget(amount_line_edit, 0, 1)
+        #bottom_controls.addWidget(QLabel('=============='), 0, 2)
         bottom_controls.addWidget(QLabel('Категория'), 1, 0)
-        bottom_controls.addWidget(QLabel('======Продукты======'), 1, 1)
-        bottom_controls.addWidget(QLabel('======Редактировать======'), 1, 2)
-        bottom_controls.addWidget(QLabel('============'), 2, 0)
-        bottom_controls.addWidget(QLabel('========Добавить======='), 2, 1)
-        bottom_controls.addWidget(QLabel('========Добавить======='), 2, 2)
+
+        category_dropdown = QComboBox()
+        category_dropdown.addItems(['Продукты', 'Тест', 'Тест'])
+
+        bottom_controls.addWidget(category_dropdown, 1, 1)
+
+        category_edit_button = QPushButton('Редактировать')
+        bottom_controls.addWidget(category_edit_button, 1, 2)
+
+        expense_add_button = QPushButton('Добавить')
+        bottom_controls.addWidget(expense_add_button, 2, 1)
 
         bottom_widget = QWidget()
         bottom_widget.setLayout(bottom_controls)
