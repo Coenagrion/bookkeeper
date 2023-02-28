@@ -73,8 +73,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         data = cat_repo.get_all()
 
-        self.model = TableModel(data)
-        self.expenses_grid.setModel(self.model)
+        self.item_model = TableModel(data)
+        self.expenses_grid.setModel(self.item_model)
 
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
