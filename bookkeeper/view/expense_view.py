@@ -1,9 +1,6 @@
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget, QGridLayout, QComboBox, QLineEdit, QPushButton
 from PySide6 import QtCore, QtWidgets
 
-from bookkeeper.models.category import Category
-from bookkeeper.repository.sqlite_repository import SQLiteRepository
-cat_repo = SQLiteRepository[Category]('test.db', Category)
 
 class TableModel(QtCore.QAbstractTableModel):
     def __init__(self, data):
@@ -71,12 +68,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.layout.addWidget(bottom_widget)
 
-        data = cat_repo.get_all()
-
-        self.item_model = TableModel(data)
-        self.expenses_grid.setModel(self.item_model)
-
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
 
         self.setCentralWidget(self.widget)
+
+    def set_expense_table(self, data):
+        self.item_model = TableModel(data)
+        self.expenses_grid.setModel(self.item_model)
