@@ -24,7 +24,6 @@ class TableModel(QtCore.QAbstractTableModel):
         return len(self._data[0])
 
 
-
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -49,7 +48,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.amount_line_edit = QLineEdit()
 
-        self.bottom_controls.addWidget(self.amount_line_edit, 0, 1)
+        self.bottom_controls.addWidget(self.amount_line_edit, 0, 1)  # TODO: добавить валидатор
         self.bottom_controls.addWidget(QLabel('Категория'), 1, 0)
 
         self.category_dropdown = QComboBox()
@@ -82,3 +81,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def on_expense_add_button_clicked(self, slot):
         self.expense_add_button.clicked.connect(slot)
+
+    def get_amount(self) -> float:
+        return float(self.amount_line_edit.text())  # TODO: обработка исключений
+
+
+    def get_selected_cat(self) -> int:
+        return self.category_dropdown.itemData(self.category_dropdown.currentIndex())
