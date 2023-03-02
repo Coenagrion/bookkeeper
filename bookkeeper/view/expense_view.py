@@ -77,4 +77,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.expenses_grid.setModel(self.item_model)
 
     def set_category_dropdown(self, data):
-        self.category_dropdown.addItems([tup[1] for tup in data])
+        for tup in data:
+            self.category_dropdown.addItem(tup[1], tup[0])
+
+    def on_expense_add_button_clicked(self, slot):
+        self.expense_add_button.clicked.connect(slot)
