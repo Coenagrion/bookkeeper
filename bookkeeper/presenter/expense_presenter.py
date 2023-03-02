@@ -1,9 +1,9 @@
 class ExpensePresenter:
 
-    def __init__(self, model, view, repo):
+    def __init__(self, model, view, cat_repo, exp_repo):
         self.model = model
         self.view = view
-        self.data = repo.get_all()
+        self.data = exp_repo.get_all()
 
     def show(self):
         self.view.show()
