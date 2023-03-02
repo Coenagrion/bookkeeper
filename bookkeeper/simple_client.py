@@ -22,7 +22,7 @@ cats = '''
 одежда
 '''.splitlines()
 
-Category.create_from_tree(read_tree(cats), cat_repo)  # TODO: не выполнять при каждом запуске
+# Category.create_from_tree(read_tree(cats), cat_repo)  # TODO: не выполнять при каждом запуске
 
 while True:
     try:
