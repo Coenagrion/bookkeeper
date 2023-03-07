@@ -30,7 +30,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.item_model = None
         self.setWindowTitle("Программа для ведения бюджета")
-        self.setFixedSize(500, 600)
 
         self.layout = QVBoxLayout()
 
@@ -74,6 +73,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def set_expense_table(self, data):
         self.item_model = TableModel(data)
         self.expenses_grid.setModel(self.item_model)
+        self.expenses_grid.resizeColumnsToContents()
+        grid_width = sum([self.expenses_grid.columnWidth(x) for x in range(0, self.item_model.columnCount(0) + 1)])
+        self.setFixedSize(grid_width + 80, 600)
 
     def set_category_dropdown(self, data):
         for tup in data:
