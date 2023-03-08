@@ -2,6 +2,7 @@ import sqlite3
 
 from inspect import get_annotations
 from bookkeeper.repository.abstract_repository import AbstractRepository, T
+from typing import Any
 
 
 class SQLiteRepository(AbstractRepository[T]):
@@ -41,7 +42,7 @@ class SQLiteRepository(AbstractRepository[T]):
         """ Получить объект по id """
         pass
 
-    def get_all(self, where: dict[str, any] | None = None) -> list[T]:
+    def get_all(self, where: dict[str, Any] | None = None) -> list[T]:
         """
         Получить все записи по некоторому условию
         where - условие в виде словаря {'название_поля': значение}
