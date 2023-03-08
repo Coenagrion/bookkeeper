@@ -3,20 +3,12 @@
 """
 
 from bookkeeper.models.category import Category
-from bookkeeper.models.expense import Expense
-from bookkeeper.repository.memory_repository import MemoryRepository
 from bookkeeper.repository.sqlite_repository import SQLiteRepository
-from bookkeeper.utils import read_tree
-
-import sys
-from PySide6 import QtCore, QtGui, QtWidgets
-from PySide6.QtCore import Qt
 
 import sys
 from collections import deque
 from PySide6.QtWidgets import *
 from PySide6.QtGui import *
-from PySide6.QtCore import *
 
 
 class view(QWidget):
@@ -26,7 +18,7 @@ class view(QWidget):
         layout = QVBoxLayout(self)
         layout.addWidget(self.tree)
         self.model = QStandardItemModel()
-        self.model.setHorizontalHeaderLabels(['Name', 'Height', 'Weight'])
+        self.model.setHorizontalHeaderLabels(['Категория'])
         self.tree.header().setDefaultSectionSize(180)
         self.tree.setModel(self.model)
         self.importData(data)
@@ -41,7 +33,7 @@ class view(QWidget):
         values = deque(data)
         while values:
             value = values.popleft()
-            if value['unique_id'] == 1:
+            if value['parent_id'] is None:
                 parent = root
             else:
                 pid = value['parent_id']
@@ -51,31 +43,15 @@ class view(QWidget):
                 parent = seen[pid]
             unique_id = value['unique_id']
             parent.appendRow([
-                QStandardItem(value['short_name']),
-                #QStandardItem(value['height']),  # TODO: убрать лишние поля
-                #QStandardItem(value['weight'])
+                QStandardItem(value['category_name'])
             ])
             seen[unique_id] = parent.child(parent.rowCount() - 1)
 
 
 if __name__ == '__main__':
-    cat_repo = SQLiteRepository[Category]('test.db', Category)  # TODO: репозиторий sqlite пока не реализован
+    cat_repo = SQLiteRepository[Category]('test.db', Category)
+    data = [{'unique_id': pk, 'category_name': name, 'parent_id': pid} for pk, name, pid in cat_repo.get_all()]
 
-    data = [{'unique_id': pk, 'short_name': name, 'parent_id': pid} for pk, name, pid in cat_repo.get_all()]
-    data = data[:4]  # TODO: выяснить причину зависания на полном списке категорий
-    print(data)
- #   data = [
- #       {'unique_id': 1, 'parent_id': 0, 'short_name':  'test test'},
- #       {'unique_id': 2, 'parent_id': 1, 'short_name':  'test test'},
- #       {'unique_id': 3, 'parent_id': 2, 'short_name':  'test test'},
- #       {'unique_id': 4, 'parent_id': 2, 'short_name':  'test test'},
- #       {'unique_id': 5, 'parent_id': 1, 'short_name':  'test test'},
- #       {'unique_id': 6, 'parent_id': 5, 'short_name':  'test test'},
- #       {'unique_id': 7, 'parent_id': 5, 'short_name':  'test test'},
- #       {'unique_id': 8, 'parent_id': 1, 'short_name':  'test test'},
- #       {'unique_id': 9, 'parent_id': 8, 'short_name':  'test test'},
- #       {'unique_id': 10, 'parent_id': 8, 'short_name': 'test test'},
- #   ]
     app = QApplication(sys.argv)
     view = view(data)
     view.setGeometry(300, 100, 600, 300)
