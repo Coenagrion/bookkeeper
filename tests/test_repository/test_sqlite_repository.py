@@ -22,5 +22,7 @@ def repo(custom_class):
 def test_add_and_get(repo, custom_class):
     obj = custom_class()
     pk = repo.add(obj)
+    o = repo.get(5555)
     assert obj.pk == pk
     assert repo.get(pk) == obj
+    assert o is None

@@ -68,7 +68,7 @@ class SQLiteRepository(AbstractRepository[T]):
             rows = cur.fetchall()
         con.close()
 
-        if rows is None:
+        if not rows:
             return None
 
         return [self.__generate_object(row) for row in rows]
