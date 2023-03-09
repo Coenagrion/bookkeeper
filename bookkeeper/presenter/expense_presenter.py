@@ -9,6 +9,8 @@ class ExpensePresenter:
         self.exp_data = None
         self.cat_data = cat_repo.get_all()  # TODO: implement update_cat_data() similar to update_expense_data()
         self.view.on_expense_add_button_clicked(self.handle_expense_add_button_clicked)
+        self.view.on_category_edit_button_clicked(self.handle_category_edit_button_clicked)
+
 
     def update_expense_data(self):
         self.exp_data = self.exp_repo.get_all()
@@ -30,3 +32,6 @@ class ExpensePresenter:
         exp = Expense(int(amount), cat_pk)
         self.exp_repo.add(exp)
         self.update_expense_data()
+
+    def handle_category_edit_button_clicked(self):
+        self.view.show_cats_dialog(self.cat_data)

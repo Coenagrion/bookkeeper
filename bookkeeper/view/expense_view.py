@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget, QGridLayout, QComboBox, QLineEdit, QPushButton
 from PySide6 import QtCore, QtWidgets
+from bookkeeper.view.categories_view import CategoryDialog
 
 
 class TableModel(QtCore.QAbstractTableModel):
@@ -57,6 +58,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.category_edit_button = QPushButton('Редактировать')
         self.bottom_controls.addWidget(self.category_edit_button, 1, 2)
+        self.category_edit_button.clicked.connect(self.show_cats_dialog)
 
         self.expense_add_button = QPushButton('Добавить')
         self.bottom_controls.addWidget(self.expense_add_button, 2, 1)
@@ -92,3 +94,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def get_selected_cat(self) -> int:
         return self.category_dropdown.itemData(self.category_dropdown.currentIndex())
+
+    def on_category_edit_button_clicked(self, slot):
+        self.category_edit_button.clicked.connect(slot)
+
+    def show_cats_dialog(self, data):
+        if data:
+            cat_dlg = CategoryDialog(data)
+            cat_dlg.setWindowTitle('Редактирование категорий')
+            cat_dlg.setGeometry(300, 100, 600, 300)
+            cat_dlg.exec_()
