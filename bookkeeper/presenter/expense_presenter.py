@@ -14,7 +14,7 @@ class ExpensePresenter:
 
     def update_expense_data(self):
         self.exp_data = self.exp_repo.get_all()
-        for e in self.exp_data:
+        for e in self.exp_data:  #TODO: "TypeError: 'NoneType' object is not iterable" on empty DB
             for c in self.cat_data:
                 if c.pk == e.category:
                     e.category = c.name
