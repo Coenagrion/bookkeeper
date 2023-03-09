@@ -23,7 +23,6 @@ class SQLiteRepository(AbstractRepository[T]):
                 cur.execute(q)
         con.close()
 
-    
     def add(self, obj: T) -> int:
         names = ', '.join(self.fields.keys())
         p = ', '.join("?" * len(self.fields))
@@ -37,6 +36,12 @@ class SQLiteRepository(AbstractRepository[T]):
         con.close()
         return obj.pk
 
+    def __generate_object(self, db_row: tuple) -> T:
+        obj = self.cls(self.fields)
+        for field, value in zip(self.fields, db_row[1:]):
+            setattr(obj, field, value)
+        obj.pk = db_row[0]
+        return obj
 
     def get(self, pk: int) -> T | None:
         """ Получить объект по id """
@@ -49,11 +54,7 @@ class SQLiteRepository(AbstractRepository[T]):
         if row is None:
             return None
 
-        obj = self.cls()
-        for field, value in zip(self.fields, row[1:]):
-            setattr(obj, field, value)
-        obj.pk = pk
-        return obj
+        return self.__generate_object(row)
 
     def get_all(self, where: dict[str, Any] | None = None) -> list[T]:
         """
@@ -64,14 +65,18 @@ class SQLiteRepository(AbstractRepository[T]):
         with sqlite3.connect(self.db_file) as con:
             cur = con.cursor()
             cur.execute(f'SELECT * FROM {self.table_name}')  # TODO: добавить блок WHERE
-            res = cur.fetchall()
+            rows = cur.fetchall()
         con.close()
-        return res
+
+        if rows is None:
+            return None
+
+        return [self.__generate_object(row) for row in rows]
 
     def update(self, obj: T) -> None:
         """ Обновить данные об объекте. Объект должен содержать поле pk. """
         pass
 
     def delete(self, pk: int) -> None:
-        """ Удалить запись """        
+        """ Удалить запись """
         pass

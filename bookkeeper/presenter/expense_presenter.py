@@ -12,15 +12,12 @@ class ExpensePresenter:
 
     def update_expense_data(self):
         self.exp_data = self.exp_repo.get_all()
-        data = []
-        for tup in self.exp_data:
-            row = list(tup)
-            for cat_tup in self.cat_data:
-                if cat_tup[0] == row[2]:
-                    row[2] = cat_tup[1]
+        for e in self.exp_data:
+            for c in self.cat_data:
+                if c.pk == e.category:
+                    e.category = c.name
                     break
-            data.append(row)
-        self.view.set_expense_table(data)
+        self.view.set_expense_table(self.exp_data)
 
     def show(self):
         self.view.show()

@@ -12,7 +12,8 @@ class TableModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            return self._data[index.row()][index.column()]
+            fields = list(self._data[index.row()].__dataclass_fields__.keys())
+            return self._data[index.row()].__getattribute__(fields[index.column()])
 
     def rowCount(self, index):
         # The length of the outer list.
@@ -21,7 +22,7 @@ class TableModel(QtCore.QAbstractTableModel):
     def columnCount(self, index):
         # The following takes the first sub-list, and returns
         # the length (only works if all rows are an equal length)
-        return len(self._data[0])
+        return len(self._data[0].__dataclass_fields__)
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -79,8 +80,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.setFixedSize(grid_width + 80, 600)
 
     def set_category_dropdown(self, data):
-        for tup in data:
-            self.category_dropdown.addItem(tup[1], tup[0])
+        for c in data:
+            self.category_dropdown.addItem(c.name, c.pk)
 
     def on_expense_add_button_clicked(self, slot):
         self.expense_add_button.clicked.connect(slot)
