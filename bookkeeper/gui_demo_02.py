@@ -50,7 +50,7 @@ class view(QWidget):
 
 if __name__ == '__main__':
     cat_repo = SQLiteRepository[Category]('test.db', Category)
-    data = [{'unique_id': pk, 'category_name': name, 'parent_id': pid} for pk, name, pid in cat_repo.get_all()]
+    data = [{'unique_id': c.pk, 'category_name': c.name, 'parent_id': c.parent} for c in cat_repo.get_all()]
 
     app = QApplication(sys.argv)
     view = view(data)
