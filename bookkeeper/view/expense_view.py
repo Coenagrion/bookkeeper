@@ -71,6 +71,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.expense_add_button = QPushButton('Добавить')
         self.bottom_controls.addWidget(self.expense_add_button, 2, 1)
 
+        self.expense_delete_button = QPushButton('Удалить')
+        self.bottom_controls.addWidget(self.expense_delete_button, 2, 2)  #TODO: improve buttons layout
+
         self.bottom_widget = QWidget()
         self.bottom_widget.setLayout(self.bottom_controls)
 
@@ -96,9 +99,20 @@ class MainWindow(QtWidgets.QMainWindow):
     def on_expense_add_button_clicked(self, slot):
         self.expense_add_button.clicked.connect(slot)
 
+    def on_expense_delete_button_clicked(self, slot):
+        self.expense_delete_button.clicked.connect(slot)
+
     def get_amount(self) -> float:
         return float(self.amount_line_edit.text())  # TODO: обработка исключений
 
+    def __get_selected_row_indices(self) -> list[int]:
+        return list(set([qmi.row() for qmi in self.expenses_grid.selectionModel().selection().indexes()]))
+
+    def get_selected_expenses(self) -> list[int] | None:
+        idx = self.__get_selected_row_indices()
+        if not idx:
+            return None
+        return [self.item_model._data[i].pk for i in idx]
 
     def get_selected_cat(self) -> int:
         return self.category_dropdown.itemData(self.category_dropdown.currentIndex())
