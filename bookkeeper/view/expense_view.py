@@ -46,8 +46,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.expenses_grid = QtWidgets.QTableView()
         self.layout.addWidget(self.expenses_grid)
 
+        self.budget_grid = QtWidgets.QTableView()
         self.layout.addWidget(QLabel('Бюджет'))
-        self.layout.addWidget(QLabel('<TODO: таблица бюджета>\n\n\n\n\n\n\n\n'))
+        self.layout.addWidget(self.budget_grid)
 
         self.bottom_controls = QGridLayout()
 
@@ -129,5 +130,5 @@ class MainWindow(QtWidgets.QMainWindow):
         if data:
             cat_dlg = CategoryDialog(data)
             cat_dlg.setWindowTitle('Редактирование категорий')
-            cat_dlg.setGeometry(300, 100, 600, 300)
+            cat_dlg.setGeometry(300, 100, 500, 300)
             cat_dlg.exec()

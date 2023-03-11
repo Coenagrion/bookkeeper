@@ -3,9 +3,10 @@ from bookkeeper.models.expense import Expense
 
 class ExpensePresenter:
 
-    def __init__(self, model, view, cat_repo, exp_repo):
+    def __init__(self, model, view, cat_repo, exp_repo, budg_repo):
         self.model = model
         self.view = view
+        self.budg_repo = budg_repo
         self.exp_repo = exp_repo
         self.exp_data = None
         self.cat_data = cat_repo.get_all()  # TODO: implement update_cat_data() similar to update_expense_data()
