@@ -73,7 +73,6 @@ class SQLiteRepository(AbstractRepository[T]):
 
         if not rows:
             return None
-        print(rows)
         return [self.__generate_object(row) for row in rows]
 
     def update(self, obj: T) -> None:
