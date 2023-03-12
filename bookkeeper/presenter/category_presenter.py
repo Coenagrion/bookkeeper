@@ -15,7 +15,8 @@ class CategoryPresenter:
     def show(self) -> None:
         self.view.show()
         self.view.set_category_dropdown(self.cat_repo.get_all())
-        self.view.import_data(self.view.data)
+        data = [{'unique_id': c.pk, 'cat_name': c.name, 'parent': c.parent} for c in self.cat_repo.get_all()]
+        self.view.import_data(data)
 
     def handle_category_add_button_clicked(self) -> None:
         parent_pk = self.view.get_selected_parent_cat()
