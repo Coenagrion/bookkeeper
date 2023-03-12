@@ -65,11 +65,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.category_dropdown = QComboBox()
         self.bottom_controls.addWidget(self.category_dropdown, 2, 1)
 
+        self.bottom_controls.addWidget(QLabel('Комментарий'), 3, 0)
+        self.comment_line_edit = QLineEdit()
+        self.bottom_controls.addWidget(self.comment_line_edit, 3, 1)
+
         self.expense_add_button = QPushButton('Добавить')
-        self.bottom_controls.addWidget(self.expense_add_button, 3, 1)
+        self.bottom_controls.addWidget(self.expense_add_button, 4, 1)
 
         self.expense_delete_button = QPushButton('Удалить')
-        self.bottom_controls.addWidget(self.expense_delete_button, 3, 2)
+        self.bottom_controls.addWidget(self.expense_delete_button, 4, 2)
 
         self.bottom_widget = QWidget()
         self.bottom_widget.setLayout(self.bottom_controls)
@@ -90,6 +94,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.setFixedSize(grid_width + 80, 600)
 
     def set_category_dropdown(self, data):
+        self.category_dropdown.setMaxCount(0)
+        self.category_dropdown.setMaxCount(len(data))
         for c in data:
             self.category_dropdown.addItem(c.name, c.pk)
 
@@ -108,7 +114,11 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             raise Exception("Unrecognized amount format")
 
-    def get_expense_date(self):
+    def get_comment(self) -> str:
+        comment = self.comment_line_edit.text()
+        return comment
+
+    def get_expense_date(self) -> date:
         if self.expense_date_line_edit.text() == "":
             return date.today()
         date_string = self.expense_date_line_edit.text()
@@ -132,8 +142,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def get_selected_cat(self) -> int:
         return self.category_dropdown.itemData(self.category_dropdown.currentIndex())
 
-    def category_edit_button_clicked(self, slot):
-        self.category_edit_button.clicked.connect(slot)
 
 
 

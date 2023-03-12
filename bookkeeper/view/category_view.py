@@ -22,22 +22,25 @@ class CategoryWindow(QWidget):
         self.tree.setModel(self.model)
 
         self.data = [{'unique_id': c.pk, 'cat_name': c.name, 'parent': c.parent} for c in data.get_all()]
-        print('trying to show cats')
         self.import_data(self.data)
         self.tree.expandAll()
 
         self.bottom_controls = QGridLayout()
 
-        self.bottom_controls.addWidget(QLabel('Название категории'), 0, 0)
+        self.bottom_controls.addWidget(QLabel('Название новой категории'), 0, 0)
         self.add_category_name = QLineEdit()
         self.bottom_controls.addWidget(self.add_category_name, 0, 1)
 
-        self.bottom_controls.addWidget(QLabel('Является частью категории'), 1, 0)
+        self.bottom_controls.addWidget(QLabel('Выбрать как родительскую категорию\n'
+                                              '          или         \nВыбрать для удаления'), 1, 0)
         self.category_dropdown = QComboBox()
         self.bottom_controls.addWidget(self.category_dropdown, 1, 1)
 
         self.category_add_button = QPushButton('Добавить категорию')
         self.bottom_controls.addWidget(self.category_add_button, 2, 0)
+
+        self.category_delete_button = QPushButton('Удалить категорию и записи о расходах')
+        self.bottom_controls.addWidget(self.category_delete_button, 2, 1)
 
         self.bottom_widget = QWidget()
         self.bottom_widget.setLayout(self.bottom_controls)
@@ -75,11 +78,19 @@ class CategoryWindow(QWidget):
         return cat_name
 
     def set_category_dropdown(self, data):
+        self.category_dropdown.setMaxCount(0)
+        self.category_dropdown.setMaxCount(len(data))
         for c in data:
             self.category_dropdown.addItem(c.name, c.pk)
 
     def get_selected_parent_cat(self) -> int:
         return self.category_dropdown.itemData(self.category_dropdown.currentIndex())
 
+    def get_selected_cat(self) -> int:
+        return self.category_dropdown.itemData(self.category_dropdown.currentIndex())
+
     def category_add_button_clicked(self, slot):
         self.category_add_button.clicked.connect(slot)
+
+    def category_delete_button_clicked(self, slot):
+        self.category_delete_button.clicked.connect(slot)

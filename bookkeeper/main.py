@@ -7,17 +7,17 @@ from bookkeeper.models.category import Category
 from bookkeeper.models.expense import Expense
 from bookkeeper.repository.sqlite_repository import SQLiteRepository
 from bookkeeper.utils import read_tree
-
 import sys
 
 cats = '''
-продукты
-    мясо
-        сырое мясо
-        мясные продукты
-    сладости
-книги
-одежда
+покупки
+    продукты
+        мясо
+            сырое мясо
+            мясные продукты
+        сладости
+    книги
+    одежда
 '''.splitlines()
 
 DB_NAME = 'test.db'
@@ -36,6 +36,6 @@ if __name__ == '__main__':
 
     window1 = ExpensePresenter(view1, cat_repo, exp_repo)
     window1.show()
-    window2 = CategoryPresenter(view2, cat_repo)
+    window2 = CategoryPresenter(view2, cat_repo, exp_repo)
     window2.show()
     app.exec()

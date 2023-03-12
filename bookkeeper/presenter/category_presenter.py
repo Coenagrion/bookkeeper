@@ -1,18 +1,21 @@
 from bookkeeper.models.category import Category
+from bookkeeper.models.expense import Expense
 from bookkeeper.repository.sqlite_repository import SQLiteRepository
-from bookkeeper.presenter.expense_presenter import ExpensePresenter
 
 
 class CategoryPresenter:
 
-    def __init__(self, view, cat_repo: SQLiteRepository):
+    def __init__(self, view, cat_repo: SQLiteRepository, exp_repo: SQLiteRepository):
         self.cat_repo = cat_repo
+        self.exp_repo = exp_repo
         self.view = view
         self.view.category_add_button_clicked(self.handle_category_add_button_clicked)
+        self.view.category_delete_button_clicked(self.handle_category_delete_button_clicked)
 
-    def show(self):
+    def show(self) -> None:
         self.view.show()
         self.view.set_category_dropdown(self.cat_repo.get_all())
+        self.view.import_data(self.view.data)
 
     def handle_category_add_button_clicked(self) -> None:
         parent_pk = self.view.get_selected_parent_cat()
@@ -21,3 +24,11 @@ class CategoryPresenter:
         self.cat_repo.add(cat)
         self.show()
 
+    def handle_category_delete_button_clicked(self) -> None:
+        selected = self.view.get_selected_cat()
+        if selected:
+            for e in self.exp_repo.get_all():
+                if e.category == selected:
+                    self.exp_repo.delete(e.pk)
+            self.cat_repo.delete(selected)
+        self.show()

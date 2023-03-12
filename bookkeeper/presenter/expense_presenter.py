@@ -31,7 +31,8 @@ class ExpensePresenter:
         cat_pk = self.view.get_selected_cat()
         amount = self.view.get_amount()
         expense_date = self.view.get_expense_date()
-        exp = Expense(int(amount), cat_pk, expense_date)
+        exp_comment = self.view.get_comment()
+        exp = Expense(int(amount), cat_pk, expense_date, comment=exp_comment)
         self.exp_repo.add(exp)
         self.update_expense_data()
 
@@ -41,4 +42,3 @@ class ExpensePresenter:
             for e in selected:
                 self.exp_repo.delete(e)
             self.update_expense_data()
-
