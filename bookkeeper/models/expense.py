@@ -3,7 +3,7 @@
 """
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, date
 
 
 @dataclass(slots=True)
@@ -19,7 +19,7 @@ class Expense:
     """
     amount: float = 0.0
     category: str | int = 0
-    expense_date: datetime = field(default_factory=datetime.now)
+    expense_date: date = field(default_factory=date.today)
     added_date: datetime = field(default_factory=datetime.now)
     comment: str = ''
     pk: int = 0

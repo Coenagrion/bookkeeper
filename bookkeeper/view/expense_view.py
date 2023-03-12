@@ -1,6 +1,9 @@
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget, QGridLayout, QComboBox, QLineEdit, QPushButton
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget, QLineEdit
+from PySide6.QtWidgets import QGridLayout, QComboBox, QPushButton
 from PySide6 import QtCore, QtWidgets
 from bookkeeper.view.category_view import CategoryDialog
+from datetime import date, datetime
+import re
 
 
 class TableModel(QtCore.QAbstractTableModel):
@@ -52,11 +55,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.bottom_controls = QGridLayout()
 
+        self.bottom_controls.addWidget(QLabel("Дата транзакции, 'ГГГГ-ММ-ДД'"), 2, 0)
+        self.expense_date_line_edit = QLineEdit()
+        self.bottom_controls.addWidget(self.expense_date_line_edit, 2, 1)
+
         self.bottom_controls.addWidget(QLabel('Сумма'), 0, 0)
 
         self.amount_line_edit = QLineEdit()
 
-        self.bottom_controls.addWidget(self.amount_line_edit, 0, 1)  # TODO: добавить валидатор
+        self.bottom_controls.addWidget(self.amount_line_edit, 0, 1)
         self.bottom_controls.addWidget(QLabel('Категория'), 1, 0)
 
         self.category_dropdown = QComboBox()
@@ -68,10 +75,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.category_edit_button.clicked.connect(self.show_cats_dialog)
 
         self.expense_add_button = QPushButton('Добавить')
-        self.bottom_controls.addWidget(self.expense_add_button, 2, 1)
+        self.bottom_controls.addWidget(self.expense_add_button, 3, 1)
 
         self.expense_delete_button = QPushButton('Удалить')
-        self.bottom_controls.addWidget(self.expense_delete_button, 2, 2)
+        self.bottom_controls.addWidget(self.expense_delete_button, 3, 2)
 
         self.bottom_widget = QWidget()
         self.bottom_widget.setLayout(self.bottom_controls)
@@ -95,19 +102,30 @@ class MainWindow(QtWidgets.QMainWindow):
         for c in data:
             self.category_dropdown.addItem(c.name, c.pk)
 
-    def on_expense_add_button_clicked(self, slot):
+    def expense_add_button_clicked(self, slot):
         self.expense_add_button.clicked.connect(slot)
 
-    def on_expense_delete_button_clicked(self, slot):
+    def expense_delete_button_clicked(self, slot):
         self.expense_delete_button.clicked.connect(slot)
 
     def get_amount(self) -> float:
-        if self.amount_line_edit.text() == "":
+        amount = self.amount_line_edit.text()
+        if amount == "":
             return 0
-        elif self.amount_line_edit.text().isdigit() or self.amount_line_edit.text()[-3] == '.':
+        elif amount.isdigit() or amount[-3] == '.':
             return float(self.amount_line_edit.text())
         else:
-            raise Exception
+            raise Exception("Unrecognized amount format")
+
+    def get_expense_date(self):
+        if self.expense_date_line_edit.text() == "":
+            return date.today()
+        date_string = self.expense_date_line_edit.text()
+        date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+        if date_pattern.match(date_string):
+            return datetime.strptime(date_string, '%Y-%m-%d').date()
+        else:
+            raise Exception("Unrecognized datetime format")
 
     def __get_selected_row_indices(self) -> list[int]:
         if self.expenses_grid.selectionModel():
@@ -123,7 +141,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def get_selected_cat(self) -> int:
         return self.category_dropdown.itemData(self.category_dropdown.currentIndex())
 
-    def on_category_edit_button_clicked(self, slot):
+    def category_edit_button_clicked(self, slot):
         self.category_edit_button.clicked.connect(slot)
 
     def show_cats_dialog(self, data):

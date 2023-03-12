@@ -3,16 +3,15 @@ from bookkeeper.models.expense import Expense
 
 class ExpensePresenter:
 
-    def __init__(self, model, view, cat_repo, exp_repo, budg_repo):
+    def __init__(self, model, view, cat_repo, exp_repo):
         self.model = model
         self.view = view
-        self.budg_repo = budg_repo
         self.exp_repo = exp_repo
         self.exp_data = None
-        self.cat_data = cat_repo.get_all()  # TODO: implement update_cat_data() similar to update_expense_data()
-        self.view.on_expense_add_button_clicked(self.handle_expense_add_button_clicked)
-        self.view.on_expense_delete_button_clicked(self.handle_expense_delete_button_clicked)
-        self.view.on_category_edit_button_clicked(self.handle_category_edit_button_clicked)
+        self.cat_data = cat_repo.get_all()
+        self.view.expense_add_button_clicked(self.handle_expense_add_button_clicked)
+        self.view.expense_delete_button_clicked(self.handle_expense_delete_button_clicked)
+        self.view.category_edit_button_clicked(self.handle_category_edit_button_clicked)
 
     def update_expense_data(self):
         self.exp_data = self.exp_repo.get_all()
@@ -33,6 +32,8 @@ class ExpensePresenter:
         cat_pk = self.view.get_selected_cat()
         amount = self.view.get_amount()
         exp = Expense(int(amount), cat_pk)
+        expense_date = self.view.get_expense_date()
+        exp = Expense(int(amount), cat_pk, expense_date)
         self.exp_repo.add(exp)
         self.update_expense_data()
 
