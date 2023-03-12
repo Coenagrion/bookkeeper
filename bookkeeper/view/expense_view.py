@@ -1,7 +1,6 @@
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget, QLineEdit
 from PySide6.QtWidgets import QGridLayout, QComboBox, QPushButton
 from PySide6 import QtCore, QtWidgets
-from bookkeeper.view.category_view import CategoryDialog
 from datetime import date, datetime
 import re
 
@@ -38,7 +37,6 @@ class TableModel(QtCore.QAbstractTableModel):
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-
         self.item_model = None
         self.setWindowTitle("Программа для ведения бюджета")
 
@@ -55,24 +53,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.bottom_controls = QGridLayout()
 
-        self.bottom_controls.addWidget(QLabel("Дата транзакции, 'ГГГГ-ММ-ДД'"), 2, 0)
+        self.bottom_controls.addWidget(QLabel("Дата транзакции, 'ГГГГ-ММ-ДД'"), 1, 0)
         self.expense_date_line_edit = QLineEdit()
-        self.bottom_controls.addWidget(self.expense_date_line_edit, 2, 1)
+        self.bottom_controls.addWidget(self.expense_date_line_edit, 1, 1)
 
         self.bottom_controls.addWidget(QLabel('Сумма'), 0, 0)
-
         self.amount_line_edit = QLineEdit()
-
         self.bottom_controls.addWidget(self.amount_line_edit, 0, 1)
-        self.bottom_controls.addWidget(QLabel('Категория'), 1, 0)
 
+        self.bottom_controls.addWidget(QLabel('Категория'), 2, 0)
         self.category_dropdown = QComboBox()
-
-        self.bottom_controls.addWidget(self.category_dropdown, 1, 1)
-
-        self.category_edit_button = QPushButton('Редактировать')
-        self.bottom_controls.addWidget(self.category_edit_button, 1, 2)
-        self.category_edit_button.clicked.connect(self.show_cats_dialog)
+        self.bottom_controls.addWidget(self.category_dropdown, 2, 1)
 
         self.expense_add_button = QPushButton('Добавить')
         self.bottom_controls.addWidget(self.expense_add_button, 3, 1)
@@ -144,9 +135,5 @@ class MainWindow(QtWidgets.QMainWindow):
     def category_edit_button_clicked(self, slot):
         self.category_edit_button.clicked.connect(slot)
 
-    def show_cats_dialog(self, data):
-        if data:
-            cat_dlg = CategoryDialog(data)
-            cat_dlg.setWindowTitle('Редактирование категорий')
-            cat_dlg.setGeometry(300, 100, 500, 300)
-            cat_dlg.exec()
+
+

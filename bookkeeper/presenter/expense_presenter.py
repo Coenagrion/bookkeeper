@@ -3,15 +3,14 @@ from bookkeeper.models.expense import Expense
 
 class ExpensePresenter:
 
-    def __init__(self, model, view, cat_repo, exp_repo):
-        self.model = model
+    def __init__(self, view, cat_repo, exp_repo):
         self.view = view
         self.exp_repo = exp_repo
         self.exp_data = None
+        self.repo_cat_data = cat_repo
         self.cat_data = cat_repo.get_all()
         self.view.expense_add_button_clicked(self.handle_expense_add_button_clicked)
         self.view.expense_delete_button_clicked(self.handle_expense_delete_button_clicked)
-        self.view.category_edit_button_clicked(self.handle_category_edit_button_clicked)
 
     def update_expense_data(self):
         self.exp_data = self.exp_repo.get_all()
@@ -31,7 +30,6 @@ class ExpensePresenter:
     def handle_expense_add_button_clicked(self) -> None:
         cat_pk = self.view.get_selected_cat()
         amount = self.view.get_amount()
-        exp = Expense(int(amount), cat_pk)
         expense_date = self.view.get_expense_date()
         exp = Expense(int(amount), cat_pk, expense_date)
         self.exp_repo.add(exp)
@@ -44,5 +42,3 @@ class ExpensePresenter:
                 self.exp_repo.delete(e)
             self.update_expense_data()
 
-    def handle_category_edit_button_clicked(self):
-        self.view.show_cats_dialog(self.cat_data)
