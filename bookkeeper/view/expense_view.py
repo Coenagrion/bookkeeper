@@ -1,7 +1,7 @@
 import re
 from datetime import date, datetime
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget, QLineEdit
-from PySide6.QtWidgets import QGridLayout, QComboBox, QPushButton
+from PySide6.QtWidgets import QGridLayout, QComboBox, QPushButton, QTableWidgetItem
 from PySide6 import QtCore, QtWidgets
 
 
@@ -47,10 +47,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.expenses_grid = QtWidgets.QTableView()
         self.layout.addWidget(self.expenses_grid)
 
-        self.budget_grid = QtWidgets.QTableView()
-        self.layout.addWidget(QLabel('Бюджет'))
-        self.layout.addWidget(self.budget_grid)
-
         self.bottom_controls = QGridLayout()
 
         self.bottom_controls.addWidget(QLabel("Дата транзакции, 'ГГГГ-ММ-ДД'"), 1, 0)
@@ -85,14 +81,25 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setCentralWidget(self.widget)
 
+        self.layout.addWidget(QLabel('Бюджет (последние обновления):'))
+
+        self.layout.addWidget(QLabel('Расходов: за день, руб         за неделю, руб'
+                                     '          за 30 дней (месяц), руб         за год, руб'))
+
+        self.budget_amount = QLabel("")
+
+    def set_budget(self, day, week, month, year):
+        self.budget_amount = QLabel(f' \t {day}  \t\t{week} \t\t {month} \t\t{year}')
+        self.layout.addWidget(self.budget_amount)
+
     def set_expense_table(self, data):
         if data:
             self.item_model = TableModel(data)
             self.expenses_grid.setModel(self.item_model)
             self.expenses_grid.resizeColumnsToContents()
-            grid_width = sum([self.expenses_grid.columnWidth(x) for x in range(0, self.item_model.columnCount(0) + 1)])
+            col_counts = self.item_model.columnCount(0)
+            grid_width = sum([self.expenses_grid.columnWidth(x) for x in range(0, col_counts + 1)])
             self.setFixedSize(grid_width + 80, 600)
-
 
     def set_category_dropdown(self, data):
         self.category_dropdown.setMaxCount(0)
@@ -127,9 +134,10 @@ class MainWindow(QtWidgets.QMainWindow):
             return datetime.strptime(date_string, '%Y-%m-%d').date()
         raise Exception("Unrecognized datetime format")
 
-    def __get_selected_row_indices(self) -> list[int]:
-        if self.expenses_grid.selectionModel():
-            return list(set([qmi.row() for qmi in self.expenses_grid.selectionModel().selection().indexes()]))
+    def __get_selected_row_indices(self) -> list[int] | None:
+        expenses_grid_prep = self.expenses_grid.selectionModel()
+        if expenses_grid_prep:
+            return list(set([qmi.row() for qmi in expenses_grid_prep.selection().indexes()]))
         return None
 
     def get_selected_expenses(self) -> list[int] | None:
@@ -140,7 +148,3 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def get_selected_cat(self) -> int:
         return self.category_dropdown.itemData(self.category_dropdown.currentIndex())
-
-
-
-
