@@ -76,13 +76,19 @@ class SQLiteRepository(AbstractRepository[T]):
         return [self.__generate_object(row) for row in rows]
 
     def update(self, obj: T) -> None:
-        names = list(self.fields.keys())
+        param_dict = obj.__dict__
+        del param_dict['pk']
+        attributes = ''
+        for attr in param_dict.keys():
+            attributes += str(attr)
+            attributes += " = '"
+            attributes += str(param_dict[attr])
+            attributes += "', "
+        attributes = attributes[:-2]
         with sqlite3.connect(self.db_file) as con:
             cur = con.cursor()
-            for param in names:
-                cur.execute(
-                    f'UPDATE {self.table_name} SET {param} = {getattr(obj, param)} WHERE rowid = {obj.pk}'
-                )
+            q = f'UPDATE {self.table_name} SET {attributes} WHERE pk = {obj.pk}'
+            cur.execute(q)
         con.close()
         return None
 

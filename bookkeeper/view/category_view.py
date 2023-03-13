@@ -32,15 +32,18 @@ class CategoryWindow(QWidget):
         self.bottom_controls.addWidget(self.add_category_name, 0, 1)
 
         self.bottom_controls.addWidget(QLabel('Выбрать как родительскую категорию\n'
-                                              '          или         \nВыбрать для удаления'), 1, 0)
+                                              '          или         \nВыбрать для редактирования|удаления'), 1, 0)
         self.category_dropdown = QComboBox()
         self.bottom_controls.addWidget(self.category_dropdown, 1, 1)
 
         self.category_add_button = QPushButton('Добавить категорию')
         self.bottom_controls.addWidget(self.category_add_button, 2, 0)
 
+        self.category_edit_button = QPushButton('Редактировать категорию')
+        self.bottom_controls.addWidget(self.category_edit_button, 2, 1)
+
         self.category_delete_button = QPushButton('Удалить категорию и записи о расходах')
-        self.bottom_controls.addWidget(self.category_delete_button, 2, 1)
+        self.bottom_controls.addWidget(self.category_delete_button, 3, 1)
 
         self.bottom_widget = QWidget()
         self.bottom_widget.setLayout(self.bottom_controls)
@@ -91,6 +94,9 @@ class CategoryWindow(QWidget):
 
     def category_add_button_clicked(self, slot):
         self.category_add_button.clicked.connect(slot)
+
+    def category_edit_button_clicked(self, slot):
+        self.category_edit_button.clicked.connect(slot)
 
     def category_delete_button_clicked(self, slot):
         self.category_delete_button.clicked.connect(slot)

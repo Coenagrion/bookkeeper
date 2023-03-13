@@ -9,6 +9,7 @@ from bookkeeper.repository.sqlite_repository import SQLiteRepository
 from bookkeeper.utils import read_tree
 import sys
 
+
 cats = '''
 покупки
     продукты

@@ -10,6 +10,7 @@ class CategoryPresenter:
         self.exp_repo = exp_repo
         self.view = view
         self.view.category_add_button_clicked(self.handle_category_add_button_clicked)
+        self.view.category_edit_button_clicked(self.handle_category_edit_button_clicked)
         self.view.category_delete_button_clicked(self.handle_category_delete_button_clicked)
 
     def show(self) -> None:
@@ -23,6 +24,13 @@ class CategoryPresenter:
         new_category_name = self.view.get_category_name()
         cat = Category(new_category_name, parent_pk)
         self.cat_repo.add(cat)
+        self.show()
+
+    def handle_category_edit_button_clicked(self) -> None:
+        selected = self.view.get_selected_cat()
+        new_category_name = self.view.get_category_name()
+        cat = Category(name=str(new_category_name), parent=self.cat_repo.get(selected).parent, pk=selected)
+        self.cat_repo.update(cat)
         self.show()
 
     def handle_category_delete_button_clicked(self) -> None:
