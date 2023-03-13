@@ -1,7 +1,6 @@
 from collections import deque
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget, QLineEdit, QTreeView
-from PySide6.QtWidgets import QGridLayout, QComboBox, QPushButton, QDialog
-from PySide6 import QtCore, QtWidgets
+from PySide6.QtWidgets import QGridLayout, QComboBox, QPushButton
 from PySide6.QtGui import *
 from bookkeeper.repository.sqlite_repository import SQLiteRepository
 
@@ -20,8 +19,9 @@ class CategoryWindow(QWidget):
         self.model.setHorizontalHeaderLabels(['Категория'])
         self.tree.header().setDefaultSectionSize(180)
         self.tree.setModel(self.model)
+        self.re = data.get_all()
 
-        self.data = [{'unique_id': c.pk, 'cat_name': c.name, 'parent': c.parent} for c in data.get_all()]
+        self.data = [{'unique_id': c.pk, 'cat_name': c.name, 'parent': c.parent} for c in self.re]
         self.import_data(self.data)
         self.tree.expandAll()
 

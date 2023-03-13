@@ -1,8 +1,8 @@
+import re
+from datetime import date, datetime
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget, QLineEdit
 from PySide6.QtWidgets import QGridLayout, QComboBox, QPushButton
 from PySide6 import QtCore, QtWidgets
-from datetime import date, datetime
-import re
 
 
 class TableModel(QtCore.QAbstractTableModel):
@@ -22,7 +22,7 @@ class TableModel(QtCore.QAbstractTableModel):
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
             fields = list(self._data[index.row()].__dataclass_fields__.keys())
-            return self._data[index.row()].__getattribute__(fields[index.column()])
+            return getattr(self._data[index.row()], fields[index.column()])
 
     def rowCount(self, index):
         # The length of the outer list.
@@ -93,6 +93,7 @@ class MainWindow(QtWidgets.QMainWindow):
             grid_width = sum([self.expenses_grid.columnWidth(x) for x in range(0, self.item_model.columnCount(0) + 1)])
             self.setFixedSize(grid_width + 80, 600)
 
+
     def set_category_dropdown(self, data):
         self.category_dropdown.setMaxCount(0)
         self.category_dropdown.setMaxCount(len(data))
@@ -109,10 +110,9 @@ class MainWindow(QtWidgets.QMainWindow):
         amount = self.amount_line_edit.text()
         if amount == "":
             return 0
-        elif amount.isdigit() or amount[-3] == '.':
+        if amount.isdigit() or amount[-3] == '.':
             return float(self.amount_line_edit.text())
-        else:
-            raise Exception("Unrecognized amount format")
+        raise Exception("Unrecognized amount format")
 
     def get_comment(self) -> str:
         comment = self.comment_line_edit.text()
@@ -125,8 +125,7 @@ class MainWindow(QtWidgets.QMainWindow):
         date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}$')
         if date_pattern.match(date_string):
             return datetime.strptime(date_string, '%Y-%m-%d').date()
-        else:
-            raise Exception("Unrecognized datetime format")
+        raise Exception("Unrecognized datetime format")
 
     def __get_selected_row_indices(self) -> list[int]:
         if self.expenses_grid.selectionModel():
