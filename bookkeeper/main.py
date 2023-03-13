@@ -21,7 +21,7 @@ cats = '''
     одежда
 '''.splitlines()
 
-DB_NAME = 'test.db'
+DB_NAME = 'bookkeeper.db'
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

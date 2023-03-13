@@ -89,7 +89,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.budget_amount = QLabel("")
 
     def set_budget(self, day, week, month, year):
-        self.budget_amount = QLabel(f' \t {day}  \t\t{week} \t\t {month} \t\t{year}')
+        self.budget_amount = QLabel(f' \t\t {day} \t\t{week} \t\t {month} \t\t{year}')
         self.layout.addWidget(self.budget_amount)
 
     def set_expense_table(self, data):
@@ -137,7 +137,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def __get_selected_row_indices(self) -> list[int] | None:
         expenses_grid_prep = self.expenses_grid.selectionModel()
         if expenses_grid_prep:
-            return list(set([qmi.row() for qmi in expenses_grid_prep.selection().indexes()]))
+            rs = list(set([qmi.row() for qmi in expenses_grid_prep.selection().indexes()]))
+            return rs
         return None
 
     def get_selected_expenses(self) -> list[int] | None:

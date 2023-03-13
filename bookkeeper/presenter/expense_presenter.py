@@ -13,7 +13,7 @@ class ExpensePresenter:
         self.view.expense_add_button_clicked(self.handle_expense_add_button_clicked)
         self.view.expense_delete_button_clicked(self.handle_expense_delete_button_clicked)
 
-    def update_budget_daily(self):
+    def update_budget_daily(self) -> int:
         budget = 0
         if self.exp_repo.get_all():
             for exp in self.exp_repo.get_all():
@@ -21,7 +21,7 @@ class ExpensePresenter:
                     budget += exp.amount
         return budget
 
-    def update_budget_weekly(self):
+    def update_budget_weekly(self) -> int:
         budget = 0
         if self.exp_repo.get_all():
             for exp in self.exp_repo.get_all():
@@ -31,7 +31,7 @@ class ExpensePresenter:
                     budget += exp.amount
         return budget
 
-    def update_budget_monthly(self):
+    def update_budget_monthly(self) -> int:
         budget = 0
         if self.exp_repo.get_all():
             for exp in self.exp_repo.get_all():
@@ -41,7 +41,7 @@ class ExpensePresenter:
                     budget += exp.amount
         return budget
 
-    def update_budget_annual(self):
+    def update_budget_annual(self) -> int:
         budget = 0
         if self.exp_repo.get_all():
             for exp in self.exp_repo.get_all():
@@ -51,7 +51,7 @@ class ExpensePresenter:
                     budget += exp.amount
         return budget
 
-    def update_expense_data(self):
+    def update_expense_data(self) -> None:
         self.exp_data = self.exp_repo.get_all()
         if self.exp_data:
             for e in self.exp_data:
