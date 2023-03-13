@@ -19,9 +19,9 @@ class CategoryWindow(QWidget):
         self.model.setHorizontalHeaderLabels(['Категория'])
         self.tree.header().setDefaultSectionSize(180)
         self.tree.setModel(self.model)
-        self.re = data.get_all()
+        self.repo = data.get_all()
 
-        self.data = [{'unique_id': c.pk, 'cat_name': c.name, 'parent': c.parent} for c in self.re]
+        self.data = [{'unique_id': c.pk, 'name': c.name, 'parent': c.parent} for c in self.repo]
         self.import_data(self.data)
         self.tree.expandAll()
 
@@ -70,7 +70,7 @@ class CategoryWindow(QWidget):
                 parent = seen[pid]
             unique_id = value['unique_id']
             parent.appendRow([
-                QStandardItem(value['cat_name'])
+                QStandardItem(value['name'])
             ])
             seen[unique_id] = parent.child(parent.rowCount() - 1)
 

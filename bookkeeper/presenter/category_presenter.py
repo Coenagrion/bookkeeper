@@ -1,5 +1,4 @@
 from bookkeeper.models.category import Category
-from bookkeeper.models.expense import Expense
 from bookkeeper.repository.sqlite_repository import SQLiteRepository
 
 
@@ -16,7 +15,7 @@ class CategoryPresenter:
     def show(self) -> None:
         self.view.show()
         self.view.set_category_dropdown(self.cat_repo.get_all())
-        data = [{'unique_id': c.pk, 'cat_name': c.name, 'parent': c.parent} for c in self.cat_repo.get_all()]
+        data = [{'unique_id': c.pk, 'name': c.name, 'parent': c.parent} for c in self.cat_repo.get_all()]
         self.view.import_data(data)
 
     def handle_category_add_button_clicked(self) -> None:
