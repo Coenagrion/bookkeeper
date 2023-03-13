@@ -17,20 +17,20 @@ class SQLiteRepository(AbstractRepository[T]):
             db_tables = [t[0].lower() for t in res.fetchall()]
             if self.table_name not in db_tables:
                 col_names = ', '.join(self.fields.keys())
-                q = f'CREATE TABLE {self.table_name} (' \
+                text = f'CREATE TABLE {self.table_name} (' \
                     f'"pk" INTEGER PRIMARY KEY AUTOINCREMENT, {col_names})'
-                cur.execute(q)
+                cur.execute(text)
         con.close()
 
     def add(self, obj: T) -> int:
         names = ', '.join(self.fields.keys())
-        p = ', '.join("?" * len(self.fields))
+        val = ', '.join("?" * len(self.fields))
         values = [getattr(obj, x) for x in self.fields]
         with sqlite3.connect(self.db_file) as con:
             cur = con.cursor()
             cur.execute('PRAGMA foreign_keys = ON')
-            q = f'INSERT INTO {self.table_name} ({names}) VALUES ({p})'
-            cur.execute(q, values)
+            text = f'INSERT INTO {self.table_name} ({names}) VALUES ({val})'
+            cur.execute(text, values)
             obj.pk = cur.lastrowid
         con.close()
         return obj.pk
@@ -45,8 +45,8 @@ class SQLiteRepository(AbstractRepository[T]):
     def get(self, pk: int) -> T | None:
         with sqlite3.connect(self.db_file) as con:
             cur = con.cursor()
-            q = f'SELECT * FROM {self.table_name} WHERE pk = {pk}'
-            row = cur.execute(q).fetchone()
+            text = f'SELECT * FROM {self.table_name} WHERE pk = {pk}'
+            row = cur.execute(text).fetchone()
         con.close()
 
         if row is None:
@@ -60,7 +60,8 @@ class SQLiteRepository(AbstractRepository[T]):
                 cur = con.cursor()
                 cur.execute('PRAGMA foreign_keys = ON')
                 cur.execute(
-                    f'SELECT FROM {self.table_name} WHERE {("{param} = {where[param]} , " for i in names)} = '
+                    f'SELECT FROM {self.table_name} '
+                    f'WHERE {("{param} = {where[param]} , " for i in names)} = '
                 )
                 rows = cur.fetchall()
             con.close()
@@ -87,8 +88,8 @@ class SQLiteRepository(AbstractRepository[T]):
         attributes = attributes[:-2]
         with sqlite3.connect(self.db_file) as con:
             cur = con.cursor()
-            q = f'UPDATE {self.table_name} SET {attributes} WHERE pk = {obj.pk}'
-            cur.execute(q)
+            text = f'UPDATE {self.table_name} SET {attributes} WHERE pk = {obj.pk}'
+            cur.execute(text)
         con.close()
         return None
 

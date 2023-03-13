@@ -1,7 +1,7 @@
 import re
 from datetime import date, datetime
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget, QLineEdit
-from PySide6.QtWidgets import QGridLayout, QComboBox, QPushButton, QTableWidgetItem
+from PySide6.QtWidgets import QGridLayout, QComboBox, QPushButton
 from PySide6 import QtCore, QtWidgets
 
 

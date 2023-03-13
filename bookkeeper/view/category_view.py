@@ -32,7 +32,7 @@ class CategoryWindow(QWidget):
         self.bottom_controls.addWidget(self.add_category_name, 0, 1)
 
         self.bottom_controls.addWidget(QLabel('Выбрать как родительскую категорию\n'
-                                              '          или         \nВыбрать для редактирования|удаления'), 1, 0)
+                                              '\t\tили\nВыбрать для редактирования|удаления'), 1, 0)
         self.category_dropdown = QComboBox()
         self.bottom_controls.addWidget(self.category_dropdown, 1, 1)
 
